@@ -6,4 +6,5 @@ public record UserGameResponse
     public required DateTime StartedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
     public required DailyGameResponse DailyGame { get; set; }
+    public required List<UserGameEntryResponse> Entries { get; set; }
 }

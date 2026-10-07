@@ -21,4 +21,6 @@ public class UserGame
     public virtual DailyGame? DailyGame { get; set; }
 
     public virtual User? User { get; set; }
+
+    public virtual ICollection<UserGameEntry> UserGameEntries { get; set; } = [];
 }

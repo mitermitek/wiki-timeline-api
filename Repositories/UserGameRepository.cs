@@ -24,6 +24,13 @@ public class UserGameRepository(WikiTimelineContext context) : IUserGameReposito
     {
         return await context.UserGames
             .Include(ug => ug.DailyGame)
+                .ThenInclude(dg => dg!.DailyGameEntities)
+                    .ThenInclude(dge => dge.Entity)
+                        .ThenInclude(e => e!.Theme)
+            .Include(ug => ug.UserGameEntries)
+                .ThenInclude(uge => uge.DailyGameEntity)
+                    .ThenInclude(dge => dge!.Entity)
+                        .ThenInclude(e => e!.Theme)
             .FirstOrDefaultAsync(ug => ug.UserGameID == userGameId && ug.UserID == userId, cancellationToken);
     }
 }

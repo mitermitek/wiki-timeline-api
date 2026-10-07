@@ -12,7 +12,8 @@ public static class UserGameMapper
             ID = entity.UserGameID,
             StartedAt = entity.StartedAt,
             CompletedAt = entity.CompletedAt,
-            DailyGame = entity.DailyGame!.ToResponse()
+            DailyGame = entity.DailyGame!.ToResponse(),
+            Entries = entity.UserGameEntries.Select(uge => uge.ToResponse()).ToList()
         };
     }
 
