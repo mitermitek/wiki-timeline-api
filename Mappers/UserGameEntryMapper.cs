@@ -5,12 +5,12 @@ namespace wiki_timeline_api.Mappers;
 
 public static class UserGameEntryMapper
 {
-    public static UserGameEntryResponse ToResponse(this UserGameEntry entity)
+    public static UserGameEntryResponse ToResponse(this UserGameEntry entity, bool revealYear = false)
     {
         return new UserGameEntryResponse
         {
             ID = entity.UserGameID,
-            Entity = entity.DailyGameEntity!.Entity!.ToResponse(),
+            Entity = entity.DailyGameEntity!.Entity!.ToResponse(revealYear),
             Order = entity.Order
         };
     }

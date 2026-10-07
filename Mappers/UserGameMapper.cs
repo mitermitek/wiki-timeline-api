@@ -7,13 +7,15 @@ public static class UserGameMapper
 {
     public static UserGameResponse ToResponse(this UserGame entity)
     {
+        var revealYear = entity.CompletedAt.HasValue;
+
         return new UserGameResponse
         {
             ID = entity.UserGameID,
             StartedAt = entity.StartedAt,
             CompletedAt = entity.CompletedAt,
-            DailyGame = entity.DailyGame!.ToResponse(),
-            Entries = entity.UserGameEntries.Select(uge => uge.ToResponse()).ToList()
+            DailyGame = entity.DailyGame!.ToResponse(revealYear),
+            Entries = entity.UserGameEntries.Select(uge => uge.ToResponse(revealYear)).ToList()
         };
     }
 

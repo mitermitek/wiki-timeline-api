@@ -5,7 +5,7 @@ namespace wiki_timeline_api.Mappers;
 
 public static class DailyGameMapper
 {
-    public static DailyGameResponse ToResponse(this DailyGame entity)
+    public static DailyGameResponse ToResponse(this DailyGame entity, bool revealYear = false)
     {
         var firstEntity = entity.DailyGameEntities.FirstOrDefault()?.Entity;
 
@@ -15,7 +15,7 @@ public static class DailyGameMapper
             CreationDate = entity.CreationDate,
             Theme = firstEntity!.Theme!.ToResponse(),
             DateType = firstEntity!.DateType,
-            Entities = [.. entity.DailyGameEntities.Select(dge => dge.Entity!.ToResponse())]
+            Entities = [.. entity.DailyGameEntities.Select(dge => dge.Entity!.ToResponse(revealYear))]
         };
     }
 }
