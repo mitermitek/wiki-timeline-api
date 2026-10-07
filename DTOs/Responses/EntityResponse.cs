@@ -1,3 +1,5 @@
+using wiki_timeline_api.Enums;
+
 namespace wiki_timeline_api.DTOs.Responses;
 
 public record EntityResponse
@@ -5,5 +7,7 @@ public record EntityResponse
     public int ID { get; set; }
     public required string Title { get; set; }
     public string? Description { get; set; }
+    public int? Year { get; set; }
+    public DateType DateType { get; set; }
     public required ThemeResponse Theme { get; set; }
 }

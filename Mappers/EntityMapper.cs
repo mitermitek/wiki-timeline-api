@@ -12,6 +12,7 @@ public static class EntityMapper
             ID = entity.ThemeID,
             Title = entity.Title,
             Description = entity.Description,
+            DateType = entity.DateType,
             Theme = entity.Theme!.ToResponse()
         };
     }
