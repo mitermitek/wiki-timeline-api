@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wiki_timeline_api.Data;
 
@@ -10,9 +11,11 @@ using wiki_timeline_api.Data;
 namespace wiki_timeline_api.Data.Migrations
 {
     [DbContext(typeof(WikiTimelineContext))]
-    partial class WikiTimelineContextModelSnapshot : ModelSnapshot
+    [Migration("20261007174856_UpdateDbSchema")]
+    partial class UpdateDbSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

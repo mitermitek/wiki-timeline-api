@@ -1,7 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace wiki_timeline_api.Entities;
 
+[Index(nameof(CreationDate), IsUnique = true)]
 public class DailyGame
 {
     [Key]
@@ -10,5 +13,6 @@ public class DailyGame
     [DataType(DataType.Date)]
     public DateOnly CreationDate { get; set; }
 
-    public virtual ICollection<DailyGameCard> DailyGameCards { get; set; } = [];
+    [InverseProperty(nameof(DailyGameEntity.DailyGame))]
+    public virtual ICollection<DailyGameEntity> DailyGameEntities { get; set; } = [];
 }
