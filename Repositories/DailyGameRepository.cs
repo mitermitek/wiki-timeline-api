@@ -9,6 +9,10 @@ public class DailyGameRepository(WikiTimelineContext context) : IDailyGameReposi
 {
     public async Task<DailyGame?> GetDailyGameByCreationDateAsync(DateOnly creationDate, CancellationToken cancellationToken)
     {
-        return await context.DailyGames.FirstOrDefaultAsync(dg => dg.CreationDate == creationDate, cancellationToken);
+        return await context.DailyGames
+            .Include(dg => dg.DailyGameEntities)
+                .ThenInclude(dge => dge.Entity)
+                    .ThenInclude(e => e!.Theme)
+            .FirstOrDefaultAsync(dg => dg.CreationDate == creationDate, cancellationToken);
     }
 }

@@ -10,7 +10,9 @@ public static class DailyGameMapper
         return new DailyGameResponse
         {
             ID = entity.DailyGameID,
-            CreationDate = entity.CreationDate
+            CreationDate = entity.CreationDate,
+            Theme = entity.DailyGameEntities.FirstOrDefault()!.Entity!.Theme!.ToResponse(),
+            Entities = [.. entity.DailyGameEntities.Select(dge => dge.Entity!.ToResponse())]
         };
     }
 }
