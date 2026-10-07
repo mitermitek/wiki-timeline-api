@@ -22,6 +22,16 @@ public interface IUserGameRepository
     Task<UserGame> CreateUserGameAsync(UserGame userGame, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Retrieves a page of games for a user and the total number of matching games.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="page"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<(List<UserGame> Items, int TotalCount)> GetUserGamesAsync(int userId, int page, int pageSize, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Retrieves a user game by its ID and the associated user ID.
     /// </summary>
     /// <param name="userGameId"></param>

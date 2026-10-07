@@ -1,6 +1,7 @@
 using wiki_timeline_api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using wiki_timeline_api.DTOs.Filters;
 using wiki_timeline_api.DTOs.Requests;
 
 namespace wiki_timeline_api.Controllers;
@@ -15,6 +16,13 @@ public class UserGameController(IUserGameService userGameService) : ControllerBa
     {
         var createdUserGame = await userGameService.CreateDailyUserGameAsync(cancellationToken);
         return CreatedAtAction(nameof(GetUserGame), new { userGameId = createdUserGame.ID }, createdUserGame);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUserGames([FromQuery] PaginationFilter filter, CancellationToken cancellationToken)
+    {
+        var userGames = await userGameService.GetUserGamesAsync(filter, cancellationToken);
+        return Ok(userGames);
     }
 
     [HttpGet("{userGameId}")]

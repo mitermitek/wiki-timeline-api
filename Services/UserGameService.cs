@@ -1,3 +1,4 @@
+using wiki_timeline_api.DTOs.Filters;
 using wiki_timeline_api.DTOs.Responses;
 using wiki_timeline_api.Exceptions.DailyGame;
 using wiki_timeline_api.Exceptions.UserGame;
@@ -28,6 +29,16 @@ public class UserGameService(IUserContextService userContextService, IUserGameRe
         var createdUserGame = await userGameRepository.CreateUserGameAsync(userGameToCreate, cancellationToken);
 
         return createdUserGame.ToResponse();
+    }
+
+    public async Task<PaginationResponse<UserGameResponse>> GetUserGamesAsync(PaginationFilter filter, CancellationToken cancellationToken)
+    {
+        var userId = userContextService.GetCurrentUserId();
+        var (userGames, totalCount) = await userGameRepository.GetUserGamesAsync(userId, filter.Page, filter.PageSize, cancellationToken);
+        var items = userGames.Select(userGame => userGame.ToResponse()).ToList();
+        var totalPages = totalCount / filter.PageSize + (totalCount % filter.PageSize == 0 ? 0 : 1);
+
+        return new PaginationResponse<UserGameResponse>(items, filter.Page, filter.PageSize, totalCount, totalPages);
     }
 
     public async Task<UserGameResponse> GetUserGameAsync(int userGameId, CancellationToken cancellationToken)

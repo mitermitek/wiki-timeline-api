@@ -1,3 +1,4 @@
+using wiki_timeline_api.DTOs.Filters;
 using wiki_timeline_api.DTOs.Responses;
 
 namespace wiki_timeline_api.Services.Interfaces;
@@ -10,6 +11,14 @@ public interface IUserGameService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<UserGameResponse> CreateDailyUserGameAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves a page of games belonging to the current user.
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<PaginationResponse<UserGameResponse>> GetUserGamesAsync(PaginationFilter filter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Retrieves a user game by its ID.
