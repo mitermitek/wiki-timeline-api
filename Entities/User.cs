@@ -17,6 +17,8 @@ public class User
 
     public required string PasswordHash { get; set; }
 
+    public long TotalScore { get; set; }
+
     [InverseProperty(nameof(UserGame.User))]
     public virtual ICollection<UserGame> UserGames { get; set; } = [];
 }

@@ -18,6 +18,8 @@ public class UserGame
 
     public DateTime? CompletedAt { get; set; }
 
+    public int? Score { get; set; }
+
     public virtual DailyGame? DailyGame { get; set; }
 
     public virtual User? User { get; set; }

@@ -22,7 +22,8 @@ public static class UserMapper
         {
             ID = entity.UserID,
             Username = entity.Username,
-            Email = entity.Email
+            Email = entity.Email,
+            TotalScore = entity.TotalScore
         };
     }
 }

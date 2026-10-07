@@ -31,6 +31,7 @@ public class UserGameRepository(WikiTimelineContext context) : IUserGameReposito
                 .ThenInclude(uge => uge.DailyGameEntity)
                     .ThenInclude(dge => dge!.Entity)
                         .ThenInclude(e => e!.Theme)
+            .Include(ug => ug.User)
             .FirstOrDefaultAsync(ug => ug.UserGameID == userGameId && ug.UserID == userId, cancellationToken);
     }
 

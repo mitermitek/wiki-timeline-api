@@ -14,6 +14,7 @@ public static class UserGameMapper
             ID = entity.UserGameID,
             StartedAt = entity.StartedAt,
             CompletedAt = entity.CompletedAt,
+            Score = entity.Score,
             DailyGame = entity.DailyGame!.ToResponse(revealYear),
             Entries = entity.UserGameEntries.Select(uge => uge.ToResponse(revealYear)).ToList()
         };

@@ -81,11 +81,25 @@ public class UserGameService(IUserContextService userContextService, IUserGameRe
 
         if (isChronological || attemptsCount + 1 == MAX_ATTEMPTS)
         {
-            userGame.CompletedAt = DateTime.Now;
+            var completedAt = DateTime.Now;
+            userGame.CompletedAt = completedAt;
+            userGame.Score = CalculateScore(attemptsCount + 1, userGame.StartedAt, completedAt);
+            userGame.User?.TotalScore += userGame.Score.Value;
         }
 
         var updatedUserGame = await userGameRepository.UpdateUserGameAsync(userGame, cancellationToken);
 
         return updatedUserGame.ToResponse();
+    }
+
+    private static int CalculateScore(int attemptsCount, DateTime startedAt, DateTime completedAt)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(attemptsCount);
+
+        var elapsedSeconds = Math.Max(0, (completedAt - startedAt).TotalSeconds);
+        var timePenalty = (long)Math.Floor(elapsedSeconds / 10);
+        var score = 1000L - 200L * (attemptsCount - 1) - timePenalty;
+
+        return (int)Math.Max(0, score);
     }
 }
