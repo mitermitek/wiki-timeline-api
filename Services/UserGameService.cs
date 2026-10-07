@@ -9,6 +9,8 @@ namespace wiki_timeline_api.Services;
 
 public class UserGameService(IUserContextService userContextService, IUserGameRepository userGameRepository, IDailyGameRepository dailyGameRepository) : IUserGameService
 {
+    private const int MAX_ATTEMPTS = 5;
+
     public async Task<UserGameResponse> CreateDailyUserGameAsync(CancellationToken cancellationToken)
     {
         var todayDate = DateOnly.FromDateTime(DateTime.Now);
@@ -34,5 +36,56 @@ public class UserGameService(IUserContextService userContextService, IUserGameRe
         var userGame = await userGameRepository.GetUserGameAsync(userGameId, userId, cancellationToken) ?? throw new UserGameNotFoundException();
 
         return userGame.ToResponse();
+    }
+
+    public async Task<UserGameResponse> CreateUserGameAttemptsAsync(int userGameId, List<int> userGameEntryIds, CancellationToken cancellationToken)
+    {
+        var userId = userContextService.GetCurrentUserId();
+        var userGame = await userGameRepository.GetUserGameAsync(userGameId, userId, cancellationToken) ?? throw new UserGameNotFoundException();
+
+        if (userGame.DailyGame?.CreationDate != DateOnly.FromDateTime(DateTime.Now))
+        {
+            throw new UserGameNotFoundException();
+        }
+
+        var userGameEntries = userGame.UserGameEntries.ToList();
+        var attemptsCount = userGameEntries.Count(entry => entry.Order == 1);
+
+        if (userGame.CompletedAt != null || attemptsCount >= MAX_ATTEMPTS)
+        {
+            throw new UserGameAlreadyCompletedException();
+        }
+
+        var dailyGameEntityIds = userGame.DailyGame?.DailyGameEntities.Select(dge => dge.DailyGameEntityID).ToList();
+        var attemptsExists = userGameEntryIds.All(attemptId => dailyGameEntityIds!.Contains(attemptId));
+        var duplicateAttempts = userGameEntryIds.GroupBy(attemptId => attemptId)
+            .Where(group => group.Count() > 1)
+            .Select(group => group.Key)
+            .ToList();
+
+        if (!attemptsExists || duplicateAttempts.Count != 0 || userGameEntryIds.Count != dailyGameEntityIds?.Count)
+        {
+            throw new BadAttemptsException();
+        }
+
+        var userGameEntriesToCreate = userGameEntryIds.Select((userGameEntryId, index) => UserGameEntryMapper.ToEntity(userGame.UserGameID, userGameEntryId, index + 1)).ToList();
+
+        foreach (var entryToCreate in userGameEntriesToCreate)
+        {
+            userGame.UserGameEntries.Add(entryToCreate);
+        }
+
+        var entityYears = userGame.DailyGame!.DailyGameEntities.ToDictionary(dailyGameEntity => dailyGameEntity.DailyGameEntityID, dailyGameEntity => dailyGameEntity.Entity!.Year);
+        var attemptYears = userGameEntryIds.Select(entryId => entityYears[entryId]).ToList();
+        var isChronological = attemptYears.SequenceEqual(attemptYears.OrderBy(year => year));
+
+        if (isChronological || attemptsCount + 1 == MAX_ATTEMPTS)
+        {
+            userGame.CompletedAt = DateTime.Now;
+        }
+
+        var updatedUserGame = await userGameRepository.UpdateUserGameAsync(userGame, cancellationToken);
+
+        return updatedUserGame.ToResponse();
     }
 }

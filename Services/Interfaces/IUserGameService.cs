@@ -18,4 +18,13 @@ public interface IUserGameService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<UserGameResponse> GetUserGameAsync(int userGameId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Creates user game attempts for a specific user game.
+    /// </summary>
+    /// <param name="userGameId"></param>
+    /// <param name="attempts"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<UserGameResponse> CreateUserGameAttemptsAsync(int userGameId, List<int> attempts, CancellationToken cancellationToken);
 }

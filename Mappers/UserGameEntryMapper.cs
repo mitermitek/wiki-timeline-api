@@ -14,4 +14,14 @@ public static class UserGameEntryMapper
             Order = entity.Order
         };
     }
+
+    public static UserGameEntry ToEntity(int userGameId, int dailyGameEntityId, int order)
+    {
+        return new UserGameEntry
+        {
+            UserGameID = userGameId,
+            DailyGameEntityID = dailyGameEntityId,
+            Order = order
+        };
+    }
 }

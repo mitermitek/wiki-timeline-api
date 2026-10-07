@@ -15,4 +15,14 @@ public class DailyGameRepository(WikiTimelineContext context) : IDailyGameReposi
                     .ThenInclude(e => e!.Theme)
             .FirstOrDefaultAsync(dg => dg.CreationDate == creationDate, cancellationToken);
     }
+
+    public async Task<bool> DailyGameEntitiesExistAsync(int dailyGameId, List<int> dailyGameEntityIds, CancellationToken cancellationToken)
+    {
+        var existingEntityIds = await context.DailyGameEntities
+            .Where(dge => dge.DailyGameID == dailyGameId && dailyGameEntityIds.Contains(dge.DailyGameEntityID))
+            .Select(dge => dge.DailyGameEntityID)
+            .ToListAsync(cancellationToken);
+
+        return existingEntityIds.Count == dailyGameEntityIds.Count;
+    }
 }

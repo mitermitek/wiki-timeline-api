@@ -29,4 +29,12 @@ public interface IUserGameRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<UserGame?> GetUserGameAsync(int userGameId, int userId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Updates an existing user game.
+    /// </summary>
+    /// <param name="userGame"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<UserGame> UpdateUserGameAsync(UserGame userGame, CancellationToken cancellationToken);
 }

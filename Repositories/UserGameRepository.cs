@@ -33,4 +33,12 @@ public class UserGameRepository(WikiTimelineContext context) : IUserGameReposito
                         .ThenInclude(e => e!.Theme)
             .FirstOrDefaultAsync(ug => ug.UserGameID == userGameId && ug.UserID == userId, cancellationToken);
     }
+
+    public async Task<UserGame> UpdateUserGameAsync(UserGame userGame, CancellationToken cancellationToken)
+    {
+        context.UserGames.Update(userGame);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return userGame;
+    }
 }

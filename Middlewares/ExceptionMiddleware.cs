@@ -35,6 +35,7 @@ public class ExceptionMiddleware(RequestDelegate next)
             BadCredentialsException => StatusCodes.Status401Unauthorized,
             UserNotFoundException or UserGameNotFoundException or DailyGameNotFoundException => StatusCodes.Status404NotFound,
             UserAlreadyExistsException or UserGameAlreadyExistsException => StatusCodes.Status409Conflict,
+            UserGameAlreadyCompletedException or BadAttemptsException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError,
         };
 
