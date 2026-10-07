@@ -29,4 +29,14 @@ public class UserRepository(WikiTimelineContext context) : IUserRepository
     {
         return await context.Users.FirstOrDefaultAsync(u => u.UserID == userId, cancellationToken);
     }
+
+    public async Task<List<User>> GetLeaderboardUsersAsync(CancellationToken cancellationToken)
+    {
+        return await context.Users
+            .AsNoTracking()
+            .OrderByDescending(user => user.TotalScore)
+            .ThenBy(user => user.Username)
+            .Take(50)
+            .ToListAsync(cancellationToken);
+    }
 }

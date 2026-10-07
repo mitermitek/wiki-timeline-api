@@ -36,4 +36,11 @@ public interface IUserRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<User?> GetUserByIdAsync(int userId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves the top 50 users based on their total score for the leaderboard.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<List<User>> GetLeaderboardUsersAsync(CancellationToken cancellationToken);
 }
