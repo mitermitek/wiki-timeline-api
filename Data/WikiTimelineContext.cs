@@ -18,5 +18,17 @@ public class WikiTimelineContext(DbContextOptions<WikiTimelineContext> opt) : Db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Entity>().Property(e => e.DateType).HasConversion(new EnumToStringConverter<DateType>());
+        var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(
+            dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
+            dateTime => DateOnly.FromDateTime(dateTime));
+
+        modelBuilder.Entity<DailyGame>()
+            .Property(d => d.CreationDate)
+            .HasConversion(dateOnlyConverter)
+            .HasColumnType("date");
+        modelBuilder.Entity<Entity>()
+            .Property(e => e.LastUsedAt)
+            .HasConversion(dateOnlyConverter)
+            .HasColumnType("date");
     }
 }
