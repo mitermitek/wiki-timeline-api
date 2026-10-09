@@ -9,7 +9,7 @@ public static class EntityMapper
     {
         return new EntityResponse
         {
-            ID = entity.ThemeID,
+            ID = entity.EntityID,
             Title = entity.Title,
             Description = entity.Description,
             Year = revealYear ? entity.Year : null,
